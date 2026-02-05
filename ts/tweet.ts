@@ -115,9 +115,9 @@ class Tweet {
         const displayText = this.written ? this.writtenText : this.text;
         const tweet_cell = (url !== "") 
             ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${displayText}</a>`
-            : `${displayText}`
+            : `${displayText}`;
         
-        return `<tr><th score="row">${rowNumber}</th>
+        return `<tr><th scope="row">${rowNumber}</th>
         <td>${this.activityType}</td>
         <td>${tweet_cell}</td>
         </tr>`;
