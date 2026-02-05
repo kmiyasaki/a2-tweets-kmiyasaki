@@ -109,13 +109,32 @@ class Tweet {
         return 0;
     }
 
+    get sentiment(): string {
+        const text = (this.written ? this.writtenText : this.text).toLowerCase();
+        const positive = ["great", "good", "amazing", "lovely", "perfect", "nice", "happy", "fun", "awesome", "beautiful", "easy", "better"];
+        const negative = ["bad", "horrible", "worst", "tired", "hurt", "pain", "sad", "exhausted", "awful", "annoying", "hard", "poor", "worse"];
+
+        let score = 0;
+        for (let i = 0; i < positive.length; i++) {
+            if (text.includes(positive[i])) score++;
+        }
+        for (let i = 0; i < negative.length; i++) {
+            if (text.includes(negative[i])) score--;
+        }
+
+        if (score > 0) return "Positive";
+        if (score < 0) return "Negative";
+        return "Neutral";
+    }
+
     getHTMLTableRow(rowNumber:number):string {
         const get_url = this.text.match(/https?:\/\/\S+/);
         const url = get_url ? get_url[0] : "";
         const displayText = this.written ? this.writtenText : this.text;
+        const withSentiment = `${displayText} <span class="text-muted">(${this.sentiment})</span>`;
         const tweet_cell = (url !== "") 
-            ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${displayText}</a>`
-            : `${displayText}`;
+            ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${withSentiment}</a>`
+            : `${withSentiment}`;
         
         return `<tr><th scope="row">${rowNumber}</th>
         <td>${this.activityType}</td>
