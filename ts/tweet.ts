@@ -9,22 +9,41 @@ class Tweet {
 
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
-        //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
-        return "unknown";
+        const t = this.text;
+
+        if (t.startsWith("Watch my") && t.includes("Runkeeper Live")) {
+            return "live_event"
+        }
+
+        if (t.startsWith("Achieved a new personal record")) {
+            return "achievement"
+        }
+
+        if (t.startsWith("Just completed")  || t.startsWith("Just posted")) {
+            return "completed_event"
+        }
+
+        return "miscellaneous";
     }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
-        //TODO: identify whether the tweet is written
-        return false;
+        return this.text.includes(" - ");
     }
 
     get writtenText():string {
         if(!this.written) {
             return "";
         }
-        //TODO: parse the written text from the tweet
-        return "";
+
+        const twt_split = this.text.split(" - ");
+        let twt_text = twt_split[1];
+        const tag_index = twt_text.indexOf("#RunKeeper");
+        if (tag_index !== -1) {
+            twt_text = twt_text.substring(0, tag_index);
+        }
+
+        return twt_text.trim();
     }
 
     get activityType():string {
